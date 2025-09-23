@@ -1,29 +1,34 @@
-# src/Makefile: build objects and link into $(BINDIR)/client
-CC := gcc
-CFLAGS := -Wall -Wextra -I../include -g
-SRCDIR := .
-OBJDIR := ../obj
-BINDIR ?= ../bin
+# Compiler and tools
+CC = gcc
+CFLAGS = -Wall -Wextra -I../include -g
+AR = ar rcs
 
-SOURCES := $(wildcard $(SRCDIR)/*.c)
-OBJECTS := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SOURCES))
-TARGET := $(BINDIR)/client
+# Directories
+OBJDIR = ../obj
+BINDIR = ../bin
+LIBDIR = ../lib
 
-.PHONY: all clean dirs
+# Files
+OBJS = $(OBJDIR)/myfilefunctions.o $(OBJDIR)/mystrfunctions.o
+LIB = $(LIBDIR)/libmyutils.a
+TARGET = $(BINDIR)/client_static
 
-all: dirs $(TARGET)
+# Default target
+all: $(TARGET)
 
-dirs:
-	@mkdir -p $(OBJDIR) $(BINDIR)
-
-# linking rule (TARGET depends on OBJECTS)
-$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $(OBJECTS)
-
-# compile each .c to obj/%.o
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
+# Compile .c -> .o
+$(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Build static library
+$(LIB): $(OBJS)
+	$(AR) $@ $^
+
+# Build client linked with static lib
+$(TARGET): $(OBJDIR)/main.o $(LIB)
+	$(CC) $(CFLAGS) $< -L$(LIBDIR) -lmyutils -o $@
+
+# Clean up
 clean:
-	rm -f $(OBJDIR)/*.o
-	rm -f $(TARGET)
+	rm -f $(OBJDIR)/*.o $(TARGET) $(LIB)
+
