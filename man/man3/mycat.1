@@ -1,0 +1,28 @@
+.\" Manpage for mycat(3)
+.TH MYCAT 3 "2025-09-23" "v0.4.1" "MyUtils library"
+.SH NAME
+mycat \- simple example function that concatenates and prints files
+
+.SH SYNOPSIS
+.B mycat
+.I filename...
+.RS
+
+.SH DESCRIPTION
+mycat reads each given filename (or standard input if none provided)
+and writes its contents to standard output. This is a demonstration
+function used by the client to show file I/O utilities in the MyUtils
+library.
+
+The function behaves similarly to the Unix \fBcat\fP utility but is
+implemented here as a library routine for demonstration and testing.
+
+.SH RETURN VALUE
+On success returns 0. On failure returns a non-zero error code and
+prints a diagnostic message to standard error.
+
+.SH SEE ALSO
+cat(1), printf(3)
+
+.SH AUTHOR
+Your Name <your.email@example.com>
